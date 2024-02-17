@@ -5,14 +5,14 @@ import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDqPk5wouh5dO9t1YIVeBrMIWIMA6HxOj0",
-    authDomain: "reviewai-f562e.firebaseapp.com",
-    projectId: "reviewai-f562e",
-    storageBucket: "reviewai-f562e.appspot.com",
-    messagingSenderId: "463802235576",
-    appId: "1:463802235576:web:1d931aa41bb3f49a0a524d",
-    measurementId: "G-RZH4PZXGQX"
-  };
+  apiKey: "AIzaSyBg09TJw5nm3G_dUEhh6ZUUWMFvH7fM0-Y",
+  authDomain: "perfectpitch-316a3.firebaseapp.com",
+  projectId: "perfectpitch-316a3",
+  storageBucket: "perfectpitch-316a3.appspot.com",
+  messagingSenderId: "196667934989",
+  appId: "1:196667934989:web:05e333f984d9fcc16b4844",
+  measurementId: "G-EF4SH1F3YW"
+};
 
 
 // Initialize Firebase
