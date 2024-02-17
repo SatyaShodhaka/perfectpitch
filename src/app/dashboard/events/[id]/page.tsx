@@ -98,6 +98,8 @@ export default function Page(params: { id: string }) {
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
+		//HACK
+		//LOADING SET TRUE
 		setIsLoading(true);
 		toast.loading("Processing recording ...", {
 			type: "info",
@@ -129,6 +131,8 @@ export default function Page(params: { id: string }) {
 				audio: file,
 			});
 
+			console.log("Transciption of the audio file: ", text);
+
 			if (!text) {
 				handleError();
 				return;
@@ -156,9 +160,12 @@ export default function Page(params: { id: string }) {
 
 		let LLMresponse = "";
 
+
+		//Making request to LLM for analysis
+
 		try {
 			LLMresponse = (await askForAnalyzation(authUser?.uid!, prompt)) as string;
-			console.log(LLMresponse);
+			console.log("In events window:", LLMresponse);
 		} catch (error) {
 			handleError();
 			return;
@@ -166,6 +173,8 @@ export default function Page(params: { id: string }) {
 
 		// const score = extractNumber(LLMresponse as string);
 		const { score, analysis } = extractScoreAndAnalysis(LLMresponse as string);
+
+		console.log("Score and Analysis:", score, analysis);
 
 		try {
 			addRecordingData(
@@ -266,6 +275,8 @@ export default function Page(params: { id: string }) {
 				})}
 			</div>
 
+
+			{/* THIS IS THE SIDE PANEL WHERE WE UPLOAD THE RECORDING */}
 			<SidePanel open={open} setOpen={setOpen}>
 				<h1 className="text-3xl font-semibold text-neutral-100 mb-8">
 					Upload Recording
