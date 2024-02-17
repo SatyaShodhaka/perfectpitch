@@ -25,6 +25,8 @@ export function addEvent(
 	eventType: string,
 	title: string,
 	company: string,
+	role: string,
+	description: string,
 	audience: string
 ) {
 	addDoc(collection(db, EVENTS_COLLECTION), {
@@ -33,6 +35,8 @@ export function addEvent(
 		eventType,
 		title,
 		company,
+		role,
+		description,
 		audience,
 	});
 }
@@ -61,6 +65,8 @@ export function updateEvent(
 	eventType: string,
 	title: string,
 	company: string,
+	role: string,
+	description: string,
 	audience: string
 ) {
 	setDoc(doc(db, EVENTS_COLLECTION, docId), {
@@ -69,6 +75,8 @@ export function updateEvent(
 		eventType,
 		title,
 		company,
+		role,
+		description,
 		audience,
 	});
 }

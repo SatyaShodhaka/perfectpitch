@@ -6,6 +6,8 @@ export type Event = {
 	eventDate: Timestamp;
 	eventType: string;
 	title: string;
+	role: string;
+	description: string;
 	company: string;
 	audience: string;
 };
