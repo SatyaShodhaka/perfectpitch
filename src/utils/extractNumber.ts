@@ -46,13 +46,18 @@ export function extractScoreAndAnalysis(input: string): {
   }
 
   export function extractQuestions(input:string) {
-	console.log(input);
-    // Define regex pattern to capture questions
-	const questionRegex = /\d+\.\s+(.*)|^(?!.*\d+\.\s+)(.*)/gm;
-
-	// Find all matches in the input string
-	const matches = input.match(questionRegex);
-
-	// If matches are found, return them; otherwise, return an empty array
-	return matches || [];
+	const questionsArray = JSON.parse(input);
+	const questions = [
+		"Experience and skills in extracting and manipulating large datasets using tools like Spark SQL and scripting languages.",
+		"Understanding of predictive modeling algorithms for supervised and unsupervised learning, including classification, regression, and clustering.",
+		"Familiarity with deep learning algorithms, such as CNN/RNN/LSTM/Transformer, and deep learning frameworks like TensorFlow or PyTorch.",
+		"Examples of problems solved independently, highlighting teamwork and communication abilities.",
+		"Experience in translating business questions into machine learning problems and developing innovative solutions.",
+		"Process for implementing state-of-the-art machine learning models to improve business metrics.",
+		"Understanding of causal inference models and their application in work.",
+		"Experiences with Large Language Models and Generative AI.",
+		"Approach to developing infrastructure tools to improve the development and deployment of machine learning models.",
+		"Alignment of personal values with the mission and culture of Apple, as described in the job description."
+	]
+    return questionsArray || questions;
 	}

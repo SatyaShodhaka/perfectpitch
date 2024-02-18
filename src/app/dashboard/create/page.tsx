@@ -56,7 +56,7 @@ export default function Page() {
 
 
 		let LLMresponse = "not updated"
-		const prompt = `Generate response as as list of strings sperated questions, Prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: ${description} and job role: ${role} at Company: ${company}.`;
+		const prompt = `Prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: ${description} and job role: ${role} at Company: ${company}. Return response as a string of questions in the format ["question 1", "question 2", "question 3", "question 4", "question 5", "question 6", "question 7", "question 8", "question 9", "question 10" ]`;
 		try {
 			//Get the questions for the description
 			const eventDocId = await addEvent(authUser?.uid, timestamp, type, title, company, role, description, audience);
