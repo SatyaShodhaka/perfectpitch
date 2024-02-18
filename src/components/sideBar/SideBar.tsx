@@ -40,11 +40,11 @@ export default function SideBar() {
 			icon: <CalendarDaysIcon className="h-6 w-6 mr-1" />,
 			name: "Events",
 		},
-		{
-			href: "/dashboard/ResumeChecker",
-			icon: <ClipboardIcon className="h-6 w-6 mr-1"/>,
-			name: "Resume Checker",
-		},
+		// {
+		// 	href: "/dashboard/ResumeChecker",
+		// 	icon: <ClipboardIcon className="h-6 w-6 mr-1"/>,
+		// 	name: "Resume Checker",
+		// },
 	];
 
 	return (
