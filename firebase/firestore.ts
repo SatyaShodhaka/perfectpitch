@@ -38,7 +38,7 @@ export async function addEvent(
 		company,
 		role,
 		description,
-		audience,
+		audience
 	});
 	return docRef.id;
 }
