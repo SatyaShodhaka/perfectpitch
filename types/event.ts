@@ -12,13 +12,20 @@ export type Event = {
 	audience: string;
 };
 
+export type QuestionData = {
+	uid: string;
+	eventDocId: string;
+	question:string;
+	docId:string;
+}
+
 export type RecordingData = {
 	uid: string;
 	eventDocId: string;
 	dateCreated: Timestamp;
-	title: string;
+	question: string,
+	questionDocId: string,
 	fileBucket: string;
-	description: string;
 	transcript: string;
 	score: number;
 	analysis: string;

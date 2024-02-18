@@ -5,20 +5,20 @@ import { SidePanel } from "@/components/sidePanel/SidePanel";
 import { MicrophoneIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { uploadFile } from "../../../../../firebase/storage";
-import { getRecordings } from "../../../../../firebase/firestore";
+import { getQuestions, getRecordings } from "../../../../../firebase/firestore";
 import { addRecordingData } from "../../../../../firebase/firestore";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../../../firebase/auth";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, doc } from "firebase/firestore";
 import { useParams } from "next/navigation";
-import type { RecordingData } from "../../../../../types/event";
+import { QuestionData, type RecordingData } from "../../../../../types/event";
 import Link from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { AssemblyAI } from "assemblyai";
 import { getEvent } from "../../../../../firebase/firestore";
 import { askForAnalyzation } from "../../../../../firebase/firebaseLLM";
 import type { Event } from "../../../../../types/event";
-import { extractNumber, extractScoreAndAnalysis } from "@/utils/extractNumber";
+import { extractScoreAndAnalysis } from "@/utils/extractNumber";
 import { getColor } from "@/utils/getScoreColor";
 
 const ERROR_MESSAGE = "Error processing data.";
@@ -30,26 +30,18 @@ const assemblyai = new AssemblyAI({
 export default function Page(params: { id: string }) {
 	const [open, setOpen] = useState(false);
 	const [currEvent, setCurrEvent] = useState<Event>();
+	const [currQuestions, setCurrQuestions] = useState<QuestionData[]>([]);
 	const [data, setData] = useState<RecordingData[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const { authUser } = useAuth();
 	const { id: eventId } = useParams();
 
-	const [cardsData, setCardsData] = useState([
-		{
-		  id: 1,
-		  title: "What are your strengths?",
-		  recordings: [],
-		},
-		{
-		  id: 2,
-		  title: "what are your weakness?",
-		  recordings: [],
-		},
-		// Add as many objects as needed for your dummy data
-	  ]);
+	const [currentQuestion, setCurrentQuestion] = useState<String>();
+	const [currentQuestionDocId, setCurrentQuestionDocId] = useState<string> ();
 
-	function togglePanel() {
+	function togglePanel(item:string, index:string) {
+		setCurrentQuestion(item);
+		setCurrentQuestionDocId(index);
 		setOpen((prev) => !prev);
 	}
 
@@ -62,7 +54,7 @@ export default function Page(params: { id: string }) {
 					setData,
 					setIsLoading
 				);
-
+		
 				setIsLoading(false);
 
 				return () => {
@@ -74,6 +66,10 @@ export default function Page(params: { id: string }) {
 		fetchData();
 	}, [authUser, eventId]);
 
+	useEffect(()=>{
+		console.log("recordings:", data);
+	},data)
+
 	useEffect(() => {
 		const fetchEventData = async () => {
 			if (authUser) {
@@ -83,6 +79,19 @@ export default function Page(params: { id: string }) {
 		};
 
 		fetchEventData();
+
+		const fetchQuestions = async () => {
+			if(authUser) {
+				const questionsData = await getQuestions(authUser?.uid!, eventId as string);
+				console.log("Retrieved questions data:", questionsData);
+				const questionsList = questionsData;
+				setCurrQuestions(questionsList);
+			}
+		}
+
+		fetchQuestions();
+
+		
 	}, [authUser, eventId]);
 
 	function handleError() {
@@ -97,6 +106,14 @@ export default function Page(params: { id: string }) {
 		});
 	}
 
+	function sortQuestions(questions:any) {
+		return questions.sort((a:any, b:any) => {
+		  const numA = parseInt(a.question.match(/^\d+/)[0], 10); // Extract and parse the number from question A
+		  const numB = parseInt(b.question.match(/^\d+/)[0], 10); // Extract and parse the number from question B
+		  return numA - numB;
+		});
+	  }
+
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
@@ -110,10 +127,10 @@ export default function Page(params: { id: string }) {
 
 		const formRef = e.currentTarget as HTMLFormElement;
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
-		const title = formData.get("title") as string;
-		const description = formData.get("description") as string;
-		const file = formData.get("audio-file") as File;
+		const question = currentQuestion as string;
+		const questionDocId = currentQuestionDocId as string;
 		const eventDocId = eventId as string;
+		const file = formData.get("audio-file") as File;
 
 		if ( !file) {
 			toast.error("All fields are required");
@@ -155,9 +172,9 @@ export default function Page(params: { id: string }) {
 		}
 
 		const prompt = `You are an ${currEvent?.eventType.toLowerCase()} assistant. I want you to help me prepare for an upcoming ${currEvent?.eventType.toLowerCase()} event with ${
-			currEvent?.company
-		}. I need you to be as honest and subjective as possible to help me. I want you to rate this content I have prepared from 0 to 100 based on performance, clarity, passion and persuasiveness. The content is below. Return the number value as format Score: . The explanation why the score was given and how to improve, I want one paragraph max five sentences with no new lines and returned as plain text as Analysis: . \n
-		Content: ${transcript}
+			currEvent?.company} and asking the quesiton " ${currentQuestion}
+			. I need you to be as honest and subjective as possible to help me. I want you to rate this content I have prepared from 0 to 100 based on performance, clarity, passion and persuasiveness. The content is below. Return the number value as format Score: . The explanation why the score was given and how to improve, I want one paragraph max five sentences with no new lines and returned as plain text as Analysis: . \n
+		Answer by the candidate: ${transcript}
 		`;
 
 		let LLMresponse = "";
@@ -181,10 +198,10 @@ export default function Page(params: { id: string }) {
 		try {
 			addRecordingData(
 				authUser?.uid,
+				question,
+				questionDocId,
 				eventDocId,
 				Timestamp.now(),
-				title,
-				description,
 				transcript,
 				score,
 				analysis,
@@ -222,11 +239,6 @@ export default function Page(params: { id: string }) {
 					<p className="font-medium text-neutral-300">
 						<b>Role:</b> {currEvent?.role}
 					</p>
-
-					<p className="font-medium text-neutral-300">
-						<b>Job Description:</b> {currEvent?.description}
-					</p>
-
 					<p className="font-medium text-neutral-300">
 						Scheduled on {currEvent?.eventDate.toDate().toLocaleDateString()}
 					</p>
@@ -235,49 +247,36 @@ export default function Page(params: { id: string }) {
 			</div>
 
 			<div className="flex flex-col gap-4">
-				{cardsData.map((card) => (
-					<div key={card.id} className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-					<h3 className="text-lg font-semibold">{card.title}</h3>
-					<button
-						onClick={togglePanel}
+				{sortQuestions(currQuestions).map((item:any, index:any) => (
+					<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
+					<h3 className="text-sm font-semibold">{item.question}</h3>
+					<div className="flex items-center space-x-4"> {/* Container for buttons */}
+					  {(() => {
+						const rec = data.find(rec => rec.questionDocId === item.docId);
+						return rec ? (
+							<Link
+							href={`/dashboard/events/${eventId}/${rec.subcollectionId}`}
+							key={index}
+							className="flex items-center py-2 px-4 rounded-md bg-green-500 hover:bg-green-600 text-sm font-medium transition-colors"
+						  >
+							See results {">"}
+						  </Link>
+						) : (
+						  <p></p> // Or another placeholder if needed
+						);
+					  })()}
+					  <button
+						onClick={() => togglePanel(item.question, item.docId)}
 						className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
-					>
+					  >
 						<PlusIcon className="w-5 h-5 mr-1" />
 						Add Recording
-					</button>
-
+					  </button>
 					</div>
+				  </div>
+					
 				))}
 				</div>
-
-
-			<div className="mx-auto grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-				{data.map((recording, index) => {
-					const date = recording.dateCreated.toDate().toLocaleDateString();
-
-					return (
-						<Link
-							href={`/dashboard/events/${eventId}/${recording.subcollectionId}`}
-							key={index}
-							className={`flex flex-col rounded-md border bg-cardColor hover:bg-neutral-800 border-inputBorder p-4 shadow-md transition-all h-36`}
-						>
-							<div className="flex justify-between items-center text-4xl font-medium mb-4">
-								<p className={`${getColor(recording.score)}`}>
-									{recording.score}
-								</p>
-
-								<ChevronRightIcon className="h-5 w-5 " />
-							</div>
-
-							<div className="flex gap-1 flex-1 text-sm">
-								<p className="font-medium">{recording.title}</p>|
-								<p className="font-medium text-sm">{date}</p>
-							</div>
-						</Link>
-					);
-				})}
-			</div>
-
 
 			{/* THIS IS THE SIDE PANEL WHERE WE UPLOAD THE RECORDING */}
 			<SidePanel open={open} setOpen={setOpen}>
@@ -294,6 +293,7 @@ export default function Page(params: { id: string }) {
 							>
 								Question
 							</label>
+							<h3 className="text-sm font-semibold">{currentQuestion}</h3>
 							
 						</div>
 
@@ -341,7 +341,6 @@ export default function Page(params: { id: string }) {
 					<div className="mt-8 flex items-center justify-end max-w-3xl">
 						<button
 							type="submit"
-							disabled={isLoading}
 							className="py-2 px-4 flex rounded-md no-underline disabled:bg-gray-700 disabled:bg-opacity-25 disabled:cursor-not-allowed bg-mainButton hover:bg-mainButtonHover text-sm font-medium"
 						>
 							Save

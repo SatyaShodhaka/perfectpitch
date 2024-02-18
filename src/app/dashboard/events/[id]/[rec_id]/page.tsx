@@ -10,7 +10,8 @@ import { getColor } from "@/utils/getScoreColor";
 import { createConversation } from "../../../../../../firebase/firebaseLLM";
 import { LLMMessage } from "../../../../../../firebase/firebaseLLM";
 import Chatbot from "@/components/chatbot/Chatbot";
-import { SparklesIcon } from "@heroicons/react/20/solid";
+import { SpeakerWaveIcon } from "@heroicons/react/20/solid";
+
 
 export default function Page(params: any) {
 	const { id, rec_id } = useParams();
@@ -42,12 +43,12 @@ export default function Page(params: any) {
 
 	return (
 		<div className="flex p-12 min-h-custom gap-16">
-			<div className="border-r border-border pr-10">
+			<div className="w-1/2">
 				<div className="flex items-center justify-between mb-8 border-b border-b-border pb-4">
-					<div className="">
-						<h1 className="text-3xl font-semibold text-neutral-100 mb-2">
-							{currRecording?.title}
-						</h1>
+					<div className="w-full">
+						<p className="text-2xl font-semibold text-neutral-100 mb-2">
+							{currRecording?.question}
+						</p>
 
 						<p className="font-medium text-neutral-300">
 							Created on{" "}
@@ -82,7 +83,7 @@ export default function Page(params: any) {
 				</div>
 			</div>
 
-			<div className="flex-1">
+			<div className="flex flex-col w-1/2 ">
 				<div className="mb-10">
 					<h2 className="text-xl font-semibold mb-4">Transcript</h2>
 					<div className="border rounded-md border-border bg-chatBG p-4">
@@ -92,7 +93,7 @@ export default function Page(params: any) {
 
 				<div className="">
 					<div className="flex items-center text-xl font-semibold mb-4">
-						<SparklesIcon className="h-6 w-6 mr-2 text-secondaryText" />
+						<SpeakerWaveIcon className="h-6 w-6 mr-2 text-secondaryText" />
 						<p className="">PerfectPitch Analysis of Transcript</p>
 					</div>
 					<div className="border rounded-md border-border bg-chatBG p-4">

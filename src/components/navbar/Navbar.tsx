@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { BoltIcon } from "@heroicons/react/20/solid";
+import { SpeakerWaveIcon } from "@heroicons/react/20/solid";
 import { useAuth } from "../../../firebase/auth";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../firebase/firebase";
@@ -20,7 +20,7 @@ export default function Navigation() {
 		<nav className="w-full justify-between items-center h-16 sticky top-0 text-white bg-main border-b border-b-border z-10 px-6">
 			<div className="flex h-16 justify-between items-center gap-6">
 				<Link href={"/"} className="flex items-center gap-2">
-					<BoltIcon className="h-7 w-7 fill-secondaryText" />
+					<SpeakerWaveIcon className="h-7 w-7 fill-secondaryText" />
 					<p className="font-bold">PerfectPitch</p>
 				</Link>
 

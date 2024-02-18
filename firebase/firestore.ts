@@ -12,7 +12,7 @@ import {
 	where,
 	onSnapshot,
 } from "firebase/firestore";
-import type { Event, RecordingData } from "../types/event";
+import type { Event, QuestionData, RecordingData } from "../types/event";
 import { Dispatch, SetStateAction } from "react";
 import { getStorageDownloadURL } from "./storage";
 import exp from "constants";
@@ -20,7 +20,7 @@ import exp from "constants";
 const EVENTS_COLLECTION = "events";
 const RECORDINGS_COLLECTION = "recordings";
 
-export function addEvent(
+export async function addEvent(
 	uid: string,
 	eventDate: Timestamp,
 	eventType: string,
@@ -30,7 +30,7 @@ export function addEvent(
 	description: string,
 	audience: string
 ) {
-	addDoc(collection(db, EVENTS_COLLECTION), {
+	const docRef = await addDoc(collection(db, EVENTS_COLLECTION), {
 		uid,
 		eventDate,
 		eventType,
@@ -38,8 +38,9 @@ export function addEvent(
 		company,
 		role,
 		description,
-		audience,
+		audience
 	});
+	return docRef.id;
 }
 
 export async function getEvent(uid: string, docId: string) {
@@ -68,7 +69,7 @@ export function updateEvent(
 	company: string,
 	role: string,
 	description: string,
-	audience: string
+	audience: string,
 ) {
 	setDoc(doc(db, EVENTS_COLLECTION, docId), {
 		uid,
@@ -122,7 +123,7 @@ export async function getRecordings(
 		where("eventDocId", "==", eventDocId),
 		orderBy("dateCreated", "desc")
 	);
-
+  
 	const unsubscribe = onSnapshot(recordingsQuery, async (snapshot) => {
 		let allRecordings = [];
 
@@ -133,14 +134,16 @@ export async function getRecordings(
 				subcollectionId: docSnapshot.id,
 				audioSrc: await getStorageDownloadURL(data["fileBucket"]),
 			});
-		}
-
+	}
+  
 		setData(allRecordings as RecordingData[]);
 		setIsLoading(false);
 	});
 
 	return unsubscribe;
-}
+  }
+
+
 export async function getResumes(uid: string) {
 	const resumeQuery = query(
 		collection(db, "resumes"),
@@ -180,10 +183,10 @@ export async function getRecording(uid: string, recordingDocId: string) {
 
 export function addRecordingData(
 	uid: string,
+	question: string,
+	questionDocId: string,
 	eventDocId: string,
 	dateCreated: Timestamp,
-	title: string,
-	description: string,
 	transcript: string,
 	score: number,
 	analysis: string,
@@ -191,11 +194,11 @@ export function addRecordingData(
 ) {
 	addDoc(collection(db, RECORDINGS_COLLECTION), {
 		uid,
+		question,
+		questionDocId,
 		eventDocId,
 		dateCreated,
-		title,
 		fileBucket,
-		description,
 		transcript,
 		score,
 		analysis,
@@ -207,30 +210,37 @@ const QUESTIONS_COLLECTION = "questions"
 
 export function addQuestion(
 	uid: string,
-	eventID: string,
+	eventDocId: string,
 	question: string,
 ) {
-	addDoc(collection(db, EVENTS_COLLECTION), {
+	addDoc(collection(db, QUESTIONS_COLLECTION), {
 		uid,
-		eventID,
+		eventDocId,
 		question
 	});
 }
 
-export async function getQuestions(eventID: string) {
+export async function getQuestions(uid: string, eventID: string) {
 	const questionsQuery = query(
 	  collection(db, QUESTIONS_COLLECTION),
-	  where("eventID", "==", eventID)
+	  where("eventDocId", "==", eventID)
 	);
   
-	const querySnapshot = await getDocs(questionsQuery);
-	const questions = querySnapshot.docs.map((docSnapshot) => ({
-	  id: docSnapshot.id,
-	  ...docSnapshot.data(),
-	}));
-  
-	return questions;
+	const questionSnapshot = await getDocs(questionsQuery);
+
+  const questions: (QuestionData & { docId: string })[] = []; // Adjusting the type to include docId
+  for (const docSnapshot of questionSnapshot.docs) {
+    const questionData = docSnapshot.data() as QuestionData;
+    questions.push({
+      ...questionData, // Spread the existing document data
+      docId: docSnapshot.id // Include the document ID
+    });
   }
+
+  console.log(questions);
+  return questions;
+}
+
 
 // create a function which will add a resume to the database 
 export function addResume(
