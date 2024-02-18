@@ -174,19 +174,38 @@ animation-delay: 1.25s;
           <section style={{ borderBottom: '1px solid #eee', paddingBottom: '20px', marginBottom: '20px' }}>
             <h2 style={{ color: '#333', marginBottom: '10px' }}>Overall Score</h2>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                {/* Placeholder for score chart */}
-                <div style={{ width: '100px', height: '100px', border: '5px solid #ffa500', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <span style={{ fontSize: '24px', color: '#333' }}>0</span>
+			<div>
+              {/* Score representation as a circular progress bar */}
+              <div style={{
+                width: '100px',
+                height: '100px',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative',
+                background: 'conic-gradient(#6495ed 0%, #6495ed 71%, #ddd 71%, #ddd 100%)' // Adjust the percentage to match the score dynamically
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  background: '#fff',
+                  borderRadius: '50%',
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <span style={{ fontSize: '24px', color: '#333' }}>71</span>
                 </div>
-                <p style={{ textAlign: 'center', marginTop: '10px' }}>Overall Score</p>
-              </div>
-              <div>
-                <p style={{ marginTop: '10px', fontSize: '14px', color: '#777' }}>
-                  Your score is out of 100.<br />Aim for a score of 90+
-                </p>
               </div>
             </div>
+            <div>
+              <p style={{ marginTop: '10px', fontSize: '14px', color: '#777' }}>
+                Your score is out of 100.<br />Aim for a score of 90+
+              </p>
+            </div>
+          </div>
           </section>
           <section>
             <h3 style={{ color: '#333', marginBottom: '20px' }}>Steps to improve your score</h3>
@@ -200,7 +219,6 @@ animation-delay: 1.25s;
                   View
                 </button>
               </div>
-              {/* Add more improvement steps here */}
             </div>
           </section>
         </div>

@@ -240,37 +240,32 @@ export default function Page(params: { id: string }) {
 
 			<div className="flex flex-col gap-4">
 				{currQuestions.map((item, index) => (
-					<div>
-						<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-							<h3 className="text-sm font-semibold">{item.question}</h3>
-							<button
-								onClick={()=>togglePanel(item.question, item.docId)}
-								className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
-							>
-								<PlusIcon className="w-5 h-5 mr-1" />
-								Add Recording
-							</button>
-							{(() => {
-							const rec = data.find(rec => rec.questionDocId === item.docId);
-							return rec ? (
+					<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
+					<h3 className="text-sm font-semibold">{item.question}</h3>
+					<div className="flex items-center space-x-4"> {/* Container for buttons */}
+					  {(() => {
+						const rec = data.find(rec => rec.questionDocId === item.docId);
+						return rec ? (
 							<Link
 							href={`/dashboard/events/${eventId}/${rec.subcollectionId}`}
 							key={index}
-							>
-								<button
-								className="flex items-center py-2 px-4 rounded-mdhover:bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
-							>
-								See Results
-							</button>
-							</Link>
-							) : (
-							// Optionally render something else or nothing if not found
-							<p></p>
-							);
-						})()}
-						</div>
-						
+							className="flex items-center py-2 px-4 rounded-md bg-green-500 hover:bg-green-600 text-sm font-medium transition-colors"
+						  >
+							See results {">"}
+						  </Link>
+						) : (
+						  <p></p> // Or another placeholder if needed
+						);
+					  })()}
+					  <button
+						onClick={() => togglePanel(item.question, item.docId)}
+						className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
+					  >
+						<PlusIcon className="w-5 h-5 mr-1" />
+						Add Recording
+					  </button>
 					</div>
+				  </div>
 					
 				))}
 				</div>
