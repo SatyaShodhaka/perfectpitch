@@ -35,6 +35,20 @@ export default function Page(params: { id: string }) {
 	const { authUser } = useAuth();
 	const { id: eventId } = useParams();
 
+	const [cardsData, setCardsData] = useState([
+		{
+		  id: 1,
+		  title: "What are your strengths?",
+		  recordings: [],
+		},
+		{
+		  id: 2,
+		  title: "what are your weakness?",
+		  recordings: [],
+		},
+		// Add as many objects as needed for your dummy data
+	  ]);
+
 	function togglePanel() {
 		setOpen((prev) => !prev);
 	}
@@ -101,7 +115,7 @@ export default function Page(params: { id: string }) {
 		const file = formData.get("audio-file") as File;
 		const eventDocId = eventId as string;
 
-		if (!title || !description || !file) {
+		if ( !file) {
 			toast.error("All fields are required");
 			return;
 		}
@@ -206,18 +220,36 @@ export default function Page(params: { id: string }) {
 					</h1>
 
 					<p className="font-medium text-neutral-300">
+						<b>Role:</b> {currEvent?.role}
+					</p>
+
+					<p className="font-medium text-neutral-300">
+						<b>Job Description:</b> {currEvent?.description}
+					</p>
+
+					<p className="font-medium text-neutral-300">
 						Scheduled on {currEvent?.eventDate.toDate().toLocaleDateString()}
 					</p>
 				</div>
 
-				<button
-					onClick={togglePanel}
-					className="self-start flex items-center py-2 px-4 rounded-md no-underline bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
-				>
-					<PlusIcon className="w-5 h-5 mr-1" />
-					Add Recording
-				</button>
 			</div>
+
+			<div className="flex flex-col gap-4">
+				{cardsData.map((card) => (
+					<div key={card.id} className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
+					<h3 className="text-lg font-semibold">{card.title}</h3>
+					<button
+						onClick={togglePanel}
+						className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
+					>
+						<PlusIcon className="w-5 h-5 mr-1" />
+						Add Recording
+					</button>
+
+					</div>
+				))}
+				</div>
+
 
 			<div className="mx-auto grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
 				{data.map((recording, index) => {
@@ -260,36 +292,9 @@ export default function Page(params: { id: string }) {
 								htmlFor="title"
 								className="block text-sm font-medium leading-6 text-neutral-300"
 							>
-								Title
+								Question
 							</label>
-							<div className="relative mt-2 rounded-md shadow-sm">
-								<input
-									type="text"
-									name="title"
-									id="title"
-									className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-									placeholder="First Recording Attempt"
-									required
-								/>
-							</div>
-						</div>
-						<div className="max-w-3xl">
-							<label
-								htmlFor="description"
-								className="block text-sm font-medium leading-6 text-neutral-300"
-							>
-								Description
-							</label>
-							<div className="mt-2">
-								<textarea
-									id="description"
-									name="description"
-									rows={3}
-									className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-									defaultValue={""}
-									placeholder="A brief description about the recording and what you tried."
-								/>
-							</div>
+							
 						</div>
 
 						<div className="max-w-3xl">
