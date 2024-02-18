@@ -47,12 +47,18 @@ export function extractScoreAndAnalysis(input: string): {
 
   export function extractQuestions(input: string): string[] {
     // Define regex pattern to capture questions
-	const questionRegex = /\d+\.\s+(.+)/g;
-
-    // Match all occurrences of questions in the input string
-    const matches = input.matchAll(questionRegex);
-
-    const questions = Array.from(matches, match => match[1]);
-
-    return questions;
+	try {
+		// Assume input is a properly formatted JSON string of an array
+		const questions = JSON.parse(input);
+		// Verify that it is indeed an array
+		if (Array.isArray(questions)) {
+		  return questions;
+		} else {
+		  throw new Error('Parsed object is not an array.');
+		}
+	  } catch (e) {
+		console.error('Failed to parse input string as JSON:', e);
+		// Handle error or return an empty array if parsing fails
+		return [];
+	  }
 	}
