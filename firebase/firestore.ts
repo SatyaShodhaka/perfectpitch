@@ -39,6 +39,7 @@ export function addEvent(
 		role,
 		description,
 		audience,
+		description
 	});
 }
 
@@ -201,6 +202,37 @@ export function addRecordingData(
 		analysis,
 	});
 }
+
+
+const QUESTIONS_COLLECTION = "questions"
+
+export function addQuestion(
+	uid: string,
+	eventID: string,
+	question: string,
+) {
+	addDoc(collection(db, EVENTS_COLLECTION), {
+		uid,
+		eventID,
+		question
+	});
+}
+
+export async function getQuestions(eventID: string) {
+	const questionsQuery = query(
+	  collection(db, QUESTIONS_COLLECTION),
+	  where("eventID", "==", eventID)
+	);
+  
+	const querySnapshot = await getDocs(questionsQuery);
+	const questions = querySnapshot.docs.map((docSnapshot) => ({
+	  id: docSnapshot.id,
+	  ...docSnapshot.data(),
+	}));
+  
+	return questions;
+  }
+
 // create a function which will add a resume to the database 
 export function addResume(
 	uid: string,

@@ -20,6 +20,8 @@ export default function Page() {
 		setEventDate(newValue);
 	};
 
+
+	//Hack Creating an event
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
@@ -27,9 +29,10 @@ export default function Page() {
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
 		const title = formData.get("title") as string;
 		const type = formData.get("type") as string;
+		//Hack Adding job description
+		const description = formData.get("description") as string;
 		const company = formData.get("company") as string;
 		const role = formData.get("role") as string;
-		const description = formData.get("description") as string;
 		const audience = formData.get("audience") as string;
 
 		if (!type || !company || !role || !description || !audience || !eventDate.startDate || !title) {
@@ -198,6 +201,27 @@ export default function Page() {
 									/>
 								</div>
 							</div>
+
+							<div className="max-w-3xl">
+								<label
+									htmlFor="description"
+									className="block text-bg font-medium leading-6 text-neutral-400"
+								>
+									Job Description
+								</label>
+								<div className="relative mt-2 rounded-md shadow-sm">
+									<textarea
+										name="description"
+										id="description"
+										rows={5}
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										placeholder="Write your job description here"
+										required
+									></textarea>
+								</div>
+							</div>
+
+
 						</div>
 					</div>
 				</div>

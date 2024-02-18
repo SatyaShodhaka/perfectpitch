@@ -70,28 +70,44 @@ export async function askForAnalyzation(uid: string, prompt: string) {
 		});
 		throw error;
 	  }
-	// const docRef = await addDoc(collection(db, DISCUSSIONS_COLLECTION), {
-	// 	uid,
-	// 	prompt,
-	// });
+}
 
-	// const response = await new Promise((resolve, reject) => {
-	// 	const unsubscribe = onSnapshot(docRef, (doc) => {
-	// 		const status = doc.get("status");
-	// 		console.log(doc);
-	// 		if (status && status.error === "ERROR") {
-	// 			unsubscribe();
-	// 			reject("Error in processing.");
-	// 		} else {
-	// 			const response = doc.get("response");
-	// 			if (response) {
-	// 				console.log("RESPONSE:" + response);
-	// 				unsubscribe();
-	// 				resolve(response);
-	// 			}
-	// 		}
-	// 	});
-	// });
+export async function askForQuestions(uid: string, prompt: string) {
+	let response = '';
+	const docRef = await addDoc(collection(db, DISCUSSIONS_COLLECTION), {
+		uid,
+		prompt: prompt,
+		status: "pending", // Initial status
+	  });
+	
+	  try {
+		// Instantiate the model with the desired configuration
+		const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+	
+		// Call the API with the provided prompt
+		const result = await model.generateContent(prompt);
+		const response = await result.response;
+		const text = await response.text(); // Assuming response.text() is the correct way to retrieve the text
+
+		console.log(text)
+	
+		// Update the Firestore document with the response
+		await setDoc(doc(db, DISCUSSIONS_COLLECTION, docRef.id), {
+			prompt: prompt,
+			response: text,
+			status: "completed",
+		});
+	
+		console.log("Response from Google Gemini: ", text);
+		return text;
+	  } catch (error) {
+		console.error("Error processing the Google Gemini API request:", error);
+		// Update the Firestore document with an error status if the API call fails
+		await setDoc(doc(db, DISCUSSIONS_COLLECTION, docRef.id), {
+		  status: "error",
+		});
+		throw error;
+	  }
 }
 
 export async function addMessage(uid: string, prompt: string) {
