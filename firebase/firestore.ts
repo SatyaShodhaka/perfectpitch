@@ -15,6 +15,7 @@ import {
 import type { Event, RecordingData } from "../types/event";
 import { Dispatch, SetStateAction } from "react";
 import { getStorageDownloadURL } from "./storage";
+import exp from "constants";
 
 const EVENTS_COLLECTION = "events";
 const RECORDINGS_COLLECTION = "recordings";
@@ -140,6 +141,21 @@ export async function getRecordings(
 
 	return unsubscribe;
 }
+export async function getResumes(uid: string) {
+	const resumeQuery = query(
+		collection(db, "resumes"),
+		where("uid", "==", uid)
+	);
+
+	const resumeSnapshot = await getDocs(resumeQuery);
+
+	const resumes: string[] = [];
+	resumeSnapshot.forEach((docSnapshot) => {
+		resumes.push(docSnapshot.data().resume);
+	});
+
+	return resumes;
+}
 
 export async function getRecording(uid: string, recordingDocId: string) {
 	const recordingQuery = query(
@@ -183,5 +199,15 @@ export function addRecordingData(
 		transcript,
 		score,
 		analysis,
+	});
+}
+// create a function which will add a resume to the database 
+export function addResume(
+	uid: string,
+	resume: string,
+) {
+	addDoc(collection(db, "resumes"), {
+		uid,
+		resume,
 	});
 }
