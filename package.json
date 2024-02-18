@@ -20,6 +20,8 @@
 		"firebaseui": "^6.1.0",
 		"next": "14.1.0",
 		"openai": "^4.28.0",
+		"pdf-ts": "^0.0.2",
+		"pdfjs-dist": "^4.0.379",
 		"react": "^18",
 		"react-dom": "^18",
 		"react-dropzone": "^14.2.3",
