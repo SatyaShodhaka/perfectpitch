@@ -25,7 +25,9 @@ export function addEvent(
 	eventType: string,
 	title: string,
 	company: string,
-	audience: string
+	audience: string,
+	// Hack new element
+	description: string
 ) {
 	addDoc(collection(db, EVENTS_COLLECTION), {
 		uid,
@@ -34,6 +36,7 @@ export function addEvent(
 		title,
 		company,
 		audience,
+		description
 	});
 }
 
@@ -177,3 +180,33 @@ export function addRecordingData(
 		analysis,
 	});
 }
+
+
+const QUESTIONS_COLLECTION = "questions"
+
+export function addQuestion(
+	uid: string,
+	eventID: string,
+	question: string,
+) {
+	addDoc(collection(db, EVENTS_COLLECTION), {
+		uid,
+		eventID,
+		question
+	});
+}
+
+export async function getQuestions(eventID: string) {
+	const questionsQuery = query(
+	  collection(db, QUESTIONS_COLLECTION),
+	  where("eventID", "==", eventID)
+	);
+  
+	const querySnapshot = await getDocs(questionsQuery);
+	const questions = querySnapshot.docs.map((docSnapshot) => ({
+	  id: docSnapshot.id,
+	  ...docSnapshot.data(),
+	}));
+  
+	return questions;
+  }
