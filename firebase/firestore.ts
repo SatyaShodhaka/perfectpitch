@@ -39,7 +39,6 @@ export function addEvent(
 		role,
 		description,
 		audience,
-		description
 	});
 }
 
