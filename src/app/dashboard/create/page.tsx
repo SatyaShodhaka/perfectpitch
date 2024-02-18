@@ -56,7 +56,8 @@ export default function Page() {
 
 
 		let LLMresponse = ""
-		const prompt = "prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: "+description+" and job role: "+role+" at Company: "+company;
+		const prompt = `prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: ${description} and job role: ${role} at Company: ${company} please generate in a JSON array format given below with double quotes:
+		["question 1", "question 2",.....,"question 10"]`;
 		console.log("Prompt: ", prompt);
 		//const prompt = "prepare me for an interview by giving me the most optimum questions that could be asked based on the job description"+description+" and job role: "+role +", (Give all possible questions that could be asked based on the job description, job role";
 
@@ -71,19 +72,19 @@ export default function Page() {
 				return;
 			}
 
-			//const questions = extractQuestions(LLMresponse);
-			const questions = [
-				"Experience and skills in extracting and manipulating large datasets using tools like Spark SQL and scripting languages.",
-				"Understanding of predictive modeling algorithms for supervised and unsupervised learning, including classification, regression, and clustering.",
-				"Familiarity with deep learning algorithms, such as CNN/RNN/LSTM/Transformer, and deep learning frameworks like TensorFlow or PyTorch.",
-				"Examples of problems solved independently, highlighting teamwork and communication abilities.",
-				"Experience in translating business questions into machine learning problems and developing innovative solutions.",
-				"Process for implementing state-of-the-art machine learning models to improve business metrics.",
-				"Understanding of causal inference models and their application in work.",
-				"Experiences with Large Language Models and Generative AI.",
-				"Approach to developing infrastructure tools to improve the development and deployment of machine learning models.",
-				"Alignment of personal values with the mission and culture of Apple, as described in the job description."
-			]
+			const questions = extractQuestions(LLMresponse);
+			// const questions = [
+			// 	"Experience and skills in extracting and manipulating large datasets using tools like Spark SQL and scripting languages.",
+			// 	"Understanding of predictive modeling algorithms for supervised and unsupervised learning, including classification, regression, and clustering.",
+			// 	"Familiarity with deep learning algorithms, such as CNN/RNN/LSTM/Transformer, and deep learning frameworks like TensorFlow or PyTorch.",
+			// 	"Examples of problems solved independently, highlighting teamwork and communication abilities.",
+			// 	"Experience in translating business questions into machine learning problems and developing innovative solutions.",
+			// 	"Process for implementing state-of-the-art machine learning models to improve business metrics.",
+			// 	"Understanding of causal inference models and their application in work.",
+			// 	"Experiences with Large Language Models and Generative AI.",
+			// 	"Approach to developing infrastructure tools to improve the development and deployment of machine learning models.",
+			// 	"Alignment of personal values with the mission and culture of Apple, as described in the job description."
+			// ]
 
 			console.log("Questions: ", questions);
 

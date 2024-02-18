@@ -250,50 +250,30 @@ export default function Page(params: { id: string }) {
 								<PlusIcon className="w-5 h-5 mr-1" />
 								Add Recording
 							</button>
-						</div>
-						<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-						{(() => {
+							{(() => {
 							const rec = data.find(rec => rec.questionDocId === item.docId);
 							return rec ? (
 							<Link
 							href={`/dashboard/events/${eventId}/${rec.subcollectionId}`}
 							key={index}
-							className={`flex flex-col rounded-md border bg-cardColor hover:bg-neutral-800 border-inputBorder p-4 shadow-md transition-all h-36`}
 							>
-								<div className="flex justify-between items-center text-4xl font-medium mb-4">
-									<p className={`${getColor(rec.score)}`}>
-										{rec.score}
-									</p>
-
-									<ChevronRightIcon className="h-5 w-5 " />
-								</div>
-
-								<div className="flex gap-1 flex-1 text-sm">
-									<p className="font-medium text-sm">{rec.dateCreated.toDate().toLocaleDateString()}</p>
-								</div>
-						
+								<button
+								className="flex items-center py-2 px-4 rounded-mdhover:bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
+							>
+								See Results
+							</button>
 							</Link>
 							) : (
 							// Optionally render something else or nothing if not found
-							<p>No recording found.</p>
+							<p></p>
 							);
 						})()}
 						</div>
+						
 					</div>
 					
 				))}
 				</div>
-
-
-
-			{/* Scores */}
-
-			<div className="mx-auto grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-				{data.map(item=>{
-					return <div key={item.uid}>{item.score}{item.questionDocId}</div>;
-				})}
-			</div>
-
 
 			{/* THIS IS THE SIDE PANEL WHERE WE UPLOAD THE RECORDING */}
 			<SidePanel open={open} setOpen={setOpen}>
