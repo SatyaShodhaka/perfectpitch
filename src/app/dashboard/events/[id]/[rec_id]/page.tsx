@@ -10,7 +10,8 @@ import { getColor } from "@/utils/getScoreColor";
 import { createConversation } from "../../../../../../firebase/firebaseLLM";
 import { LLMMessage } from "../../../../../../firebase/firebaseLLM";
 import Chatbot from "@/components/chatbot/Chatbot";
-import { SparklesIcon } from "@heroicons/react/20/solid";
+import { SpeakerWaveIcon } from "@heroicons/react/20/solid";
+
 
 export default function Page(params: any) {
 	const { id, rec_id } = useParams();
@@ -92,7 +93,7 @@ export default function Page(params: any) {
 
 				<div className="">
 					<div className="flex items-center text-xl font-semibold mb-4">
-						<SparklesIcon className="h-6 w-6 mr-2 text-secondaryText" />
+						<SpeakerWaveIcon className="h-6 w-6 mr-2 text-secondaryText" />
 						<p className="">PerfectPitch Analysis of Transcript</p>
 					</div>
 					<div className="border rounded-md border-border bg-chatBG p-4">
