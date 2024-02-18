@@ -5,8 +5,11 @@ import {
 	Squares2X2Icon,
 	PencilSquareIcon,
 	CalendarDaysIcon,
+	ClipboardIcon,
+
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
+import { Icons } from "react-toastify";
 
 export default function SideBar() {
 	const pathname = usePathname();
@@ -36,6 +39,11 @@ export default function SideBar() {
 			href: "/dashboard/events",
 			icon: <CalendarDaysIcon className="h-6 w-6 mr-1" />,
 			name: "Events",
+		},
+		{
+			href: "/dashboard/ResumeChecker",
+			icon: <ClipboardIcon className="h-6 w-6 mr-1"/>,
+			name: "Resume Checker",
 		},
 	];
 
