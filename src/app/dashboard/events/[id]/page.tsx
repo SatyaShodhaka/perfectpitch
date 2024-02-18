@@ -38,11 +38,13 @@ export default function Page(params: { id: string }) {
 	const [cardsData, setCardsData] = useState([
 		{
 		  id: 1,
-		  title: "What are your strengths?"
+		  title: "What are your strengths?",
+		  recordings: [],
 		},
 		{
 		  id: 2,
 		  title: "what are your weakness?",
+		  recordings: [],
 		},
 		// Add as many objects as needed for your dummy data
 	  ]);
@@ -113,7 +115,7 @@ export default function Page(params: { id: string }) {
 		const file = formData.get("audio-file") as File;
 		const eventDocId = eventId as string;
 
-		if (!title || !description || !file) {
+		if ( !file) {
 			toast.error("All fields are required");
 			return;
 		}
@@ -243,6 +245,7 @@ export default function Page(params: { id: string }) {
 						<PlusIcon className="w-5 h-5 mr-1" />
 						Add Recording
 					</button>
+
 					</div>
 				))}
 				</div>
