@@ -38,8 +38,7 @@ export function addEvent(
 		company,
 		role,
 		description,
-		audience,
-		description
+		audience
 	});
 }
 

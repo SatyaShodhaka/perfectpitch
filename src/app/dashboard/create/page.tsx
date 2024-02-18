@@ -166,25 +166,6 @@ export default function Page() {
 
 							<div className="max-w-3xl">
 								<label
-									htmlFor="description"
-									className="block text-sm font-medium leading-6 text-neutral-400"
-								>
-									Job Description
-								</label>
-								<div className="relative mt-2 rounded-md shadow-sm">
-									<input
-										type="text"
-										name="description"
-										id="description"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Describe the responsibilities of the position"
-										required
-									/>
-								</div>
-							</div>
-
-							<div className="max-w-3xl">
-								<label
 									htmlFor="audience"
 									className="block text-sm font-medium leading-6 text-neutral-400"
 								>
