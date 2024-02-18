@@ -247,7 +247,7 @@ export default function Page(params: { id: string }) {
 			</div>
 
 			<div className="flex flex-col gap-4">
-				{sortQuestions(currQuestions).map((item:any, index:any) => (
+				{currQuestions.map((item:any, index:any) => (
 					<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
 					<h3 className="text-sm font-semibold">{item.question}</h3>
 					<div className="flex items-center space-x-4"> {/* Container for buttons */}

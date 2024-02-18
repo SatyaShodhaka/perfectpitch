@@ -46,6 +46,7 @@ export function extractScoreAndAnalysis(input: string): {
   }
 
   export function extractQuestions(input:string) {
+	console.log(input);
     // Define regex pattern to capture questions
 	const questionRegex = /\d+\.\s+(.*)|^(?!.*\d+\.\s+)(.*)/gm;
 
