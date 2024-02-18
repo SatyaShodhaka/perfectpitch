@@ -240,46 +240,32 @@ export default function Page(params: { id: string }) {
 
 			<div className="flex flex-col gap-4">
 				{currQuestions.map((item, index) => (
-					<div>
-						<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-							<h3 className="text-sm font-semibold">{item.question}</h3>
-							<button
-								onClick={()=>togglePanel(item.question, item.docId)}
-								className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
-							>
-								<PlusIcon className="w-5 h-5 mr-1" />
-								Add Recording
-							</button>
-						</div>
-						<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-						{(() => {
-							const rec = data.find(rec => rec.questionDocId === item.docId);
-							return rec ? (
+					<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
+					<h3 className="text-sm font-semibold">{item.question}</h3>
+					<div className="flex items-center space-x-4"> {/* Container for buttons */}
+					  {(() => {
+						const rec = data.find(rec => rec.questionDocId === item.docId);
+						return rec ? (
 							<Link
 							href={`/dashboard/events/${eventId}/${rec.subcollectionId}`}
 							key={index}
-							className={`flex flex-col rounded-md border bg-cardColor hover:bg-neutral-800 border-inputBorder p-4 shadow-md transition-all h-36`}
-							>
-								<div className="flex justify-between items-center text-4xl font-medium mb-4">
-									<p className={`${getColor(rec.score)}`}>
-										{rec.score}
-									</p>
-
-									<ChevronRightIcon className="h-5 w-5 " />
-								</div>
-
-								<div className="flex gap-1 flex-1 text-sm">
-									<p className="font-medium text-sm">{rec.dateCreated.toDate().toLocaleDateString()}</p>
-								</div>
-						
-							</Link>
-							) : (
-							// Optionally render something else or nothing if not found
-							<p>No recording found.</p>
-							);
-						})()}
-						</div>
+							className="flex items-center py-2 px-4 rounded-md bg-green-500 hover:bg-green-600 text-sm font-medium transition-colors"
+						  >
+							See results {">"}
+						  </Link>
+						) : (
+						  <p></p> // Or another placeholder if needed
+						);
+					  })()}
+					  <button
+						onClick={() => togglePanel(item.question, item.docId)}
+						className="flex items-center py-2 px-4 rounded-md bg-indigo-500 hover:bg-indigo-600 text-sm font-medium transition-colors"
+					  >
+						<PlusIcon className="w-5 h-5 mr-1" />
+						Add Recording
+					  </button>
 					</div>
+				  </div>
 					
 				))}
 				</div>

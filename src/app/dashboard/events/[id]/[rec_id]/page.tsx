@@ -82,7 +82,7 @@ export default function Page(params: any) {
 				</div>
 			</div>
 
-			<div className="flex-1">
+			<div className="flex-2">
 				<div className="mb-10">
 					<h2 className="text-xl font-semibold mb-4">Transcript</h2>
 					<div className="border rounded-md border-border bg-chatBG p-4">
