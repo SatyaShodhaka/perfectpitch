@@ -57,14 +57,7 @@ export async function askForAnalyzation(uid: string, prompt: string) {
 
 const QUESTIONS_COLLECTION = "questions";
 
-export async function askForQuestions(uid: string, prompt: string) {
-	let response = '';
-	const docRef = await addDoc(collection(db, QUESTIONS_COLLECTION), {
-		uid,
-		prompt: prompt,
-		status: "pending", // Initial status
-	  });
-	
+export async function askForQuestions(uid: string, prompt: string) {	
 	  try {
 		// Instantiate the model with the desired configuration
 		const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -73,7 +66,6 @@ export async function askForQuestions(uid: string, prompt: string) {
 		const result = await model.generateContent(prompt);
 		const response = await result.response;
 		const text = await response.text(); // Assuming response.text() is the correct way to retrieve the text
-
 		return text;
 	  } catch (error) {
 		console.error("Error processing the Google Gemini API request:", error);

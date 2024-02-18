@@ -42,12 +42,12 @@ export default function Page(params: any) {
 
 	return (
 		<div className="flex p-12 min-h-custom gap-16">
-			<div className="border-r border-border pr-10">
+			<div className="w-1/2">
 				<div className="flex items-center justify-between mb-8 border-b border-b-border pb-4">
-					<div className="">
-						<h1 className="text-3xl font-semibold text-neutral-100 mb-2">
+					<div className="w-full">
+						<p className="text-2xl font-semibold text-neutral-100 mb-2">
 							{currRecording?.question}
-						</h1>
+						</p>
 
 						<p className="font-medium text-neutral-300">
 							Created on{" "}
@@ -82,7 +82,7 @@ export default function Page(params: any) {
 				</div>
 			</div>
 
-			<div className="flex-2">
+			<div className="flex flex-col w-1/2 ">
 				<div className="mb-10">
 					<h2 className="text-xl font-semibold mb-4">Transcript</h2>
 					<div className="border rounded-md border-border bg-chatBG p-4">

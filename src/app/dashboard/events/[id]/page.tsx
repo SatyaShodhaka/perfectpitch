@@ -106,6 +106,14 @@ export default function Page(params: { id: string }) {
 		});
 	}
 
+	function sortQuestions(questions:any) {
+		return questions.sort((a:any, b:any) => {
+		  const numA = parseInt(a.question.match(/^\d+/)[0], 10); // Extract and parse the number from question A
+		  const numB = parseInt(b.question.match(/^\d+/)[0], 10); // Extract and parse the number from question B
+		  return numA - numB;
+		});
+	  }
+
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
@@ -239,7 +247,7 @@ export default function Page(params: { id: string }) {
 			</div>
 
 			<div className="flex flex-col gap-4">
-				{currQuestions.map((item, index) => (
+				{sortQuestions(currQuestions).map((item:any, index:any) => (
 					<div className="bg-dark-background text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
 					<h3 className="text-sm font-semibold">{item.question}</h3>
 					<div className="flex items-center space-x-4"> {/* Container for buttons */}

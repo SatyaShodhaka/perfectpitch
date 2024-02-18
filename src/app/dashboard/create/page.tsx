@@ -55,23 +55,18 @@ export default function Page() {
 		}
 
 
-		let LLMresponse = ""
-		const prompt = `prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: ${description} and job role: ${role} at Company: ${company} please generate in a JSON array format given below with double quotes:
-		["question 1", "question 2",.....,"question 10"]`;
-		console.log("Prompt: ", prompt);
-		//const prompt = "prepare me for an interview by giving me the most optimum questions that could be asked based on the job description"+description+" and job role: "+role +", (Give all possible questions that could be asked based on the job description, job role";
-
+		let LLMresponse = "not updated"
+		const prompt = `Generate response as as list of strings sperated questions, Prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: ${description} and job role: ${role} at Company: ${company}.`;
 		try {
 			//Get the questions for the description
 			const eventDocId = await addEvent(authUser?.uid, timestamp, type, title, company, role, description, audience);
 			try {
-				LLMresponse = (await askForQuestions(eventDocId, prompt)) as string;
-				console.log("In events window:", LLMresponse);
+				LLMresponse = await askForQuestions(eventDocId, prompt);
 			} catch (error) {
 				handleError();
 				return;
 			}
-
+			console.log(LLMresponse)
 			const questions = extractQuestions(LLMresponse);
 			// const questions = [
 			// 	"Experience and skills in extracting and manipulating large datasets using tools like Spark SQL and scripting languages.",
