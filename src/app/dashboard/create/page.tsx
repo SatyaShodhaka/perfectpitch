@@ -7,6 +7,11 @@ import { addEvent } from "../../../../firebase/firestore";
 import { useAuth } from "../../../../firebase/auth";
 import { useRouter } from "next/navigation";
 import { Timestamp } from "firebase/firestore";
+import { askForQuestions } from "../../../../firebase/firebaseLLM";
+import { addQuestion } from "../../../../firebase/firestore";
+import { extractQuestions, extractScoreAndAnalysis } from "@/utils/extractNumber";
+
+const ERROR_MESSAGE = "Error processing data.";
 
 export default function Page() {
 	const [eventDate, setEventDate] = useState({
@@ -49,8 +54,59 @@ export default function Page() {
 			return;
 		}
 
+
+		let LLMresponse = ""
+		const prompt = "prepare me for an interview by giving me the most optimum 10 questions with number that could be asked based on the job description: "+description+" and job role: "+role+" at Company: "+company;
+		console.log("Prompt: ", prompt);
+		//const prompt = "prepare me for an interview by giving me the most optimum questions that could be asked based on the job description"+description+" and job role: "+role +", (Give all possible questions that could be asked based on the job description, job role";
+
 		try {
-			addEvent(authUser?.uid, timestamp, type, title, company, role, description, audience);
+			//Get the questions for the description
+			const eventDocId = await addEvent(authUser?.uid, timestamp, type, title, company, role, description, audience);
+			try {
+				LLMresponse = (await askForQuestions(eventDocId, prompt)) as string;
+				console.log("In events window:", LLMresponse);
+			} catch (error) {
+				handleError();
+				return;
+			}
+
+			//const questions = extractQuestions(LLMresponse);
+			const questions = [
+				"Experience and skills in extracting and manipulating large datasets using tools like Spark SQL and scripting languages.",
+				"Understanding of predictive modeling algorithms for supervised and unsupervised learning, including classification, regression, and clustering.",
+				"Familiarity with deep learning algorithms, such as CNN/RNN/LSTM/Transformer, and deep learning frameworks like TensorFlow or PyTorch.",
+				"Examples of problems solved independently, highlighting teamwork and communication abilities.",
+				"Experience in translating business questions into machine learning problems and developing innovative solutions.",
+				"Process for implementing state-of-the-art machine learning models to improve business metrics.",
+				"Understanding of causal inference models and their application in work.",
+				"Experiences with Large Language Models and Generative AI.",
+				"Approach to developing infrastructure tools to improve the development and deployment of machine learning models.",
+				"Alignment of personal values with the mission and culture of Apple, as described in the job description."
+			]
+
+			console.log("Questions: ", questions);
+
+			try {
+				// addQuestion(
+				// 	authUser?.uid,
+				// 	eventDocId,
+				// 	questions
+				// );
+				for (const question of questions) {
+					try {
+					  await addQuestion(authUser?.uid, eventDocId, question);
+					  console.log('Question added successfully:', question);
+					} catch (error) {
+					  console.error('Error adding question:', question, error);
+					  // Optionally break the loop if a single add fails
+					  // break;
+					}
+				  }
+			} catch (error) {
+				handleError();
+				return;
+			}
 			toast.success("Event created successfully");
 		} catch (error) {
 			toast.error("Error creating event");
@@ -61,6 +117,20 @@ export default function Page() {
 		if (formRef) {
 			formRef.reset();
 		}
+	}
+
+	const [isLoading, setIsLoading] = useState(true);
+
+	function handleError() {
+		setIsLoading(false);
+		toast.update("uploadRecording", {
+			render: ERROR_MESSAGE,
+			type: "error",
+			isLoading: false,
+			autoClose: 3000,
+			draggable: true,
+			closeOnClick: true,
+		});
 	}
 
 	return (
@@ -159,25 +229,6 @@ export default function Page() {
 										id="role"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="Software Engineer"
-										required
-									/>
-								</div>
-							</div>
-
-							<div className="max-w-3xl">
-								<label
-									htmlFor="description"
-									className="block text-sm font-medium leading-6 text-neutral-400"
-								>
-									Job Description
-								</label>
-								<div className="relative mt-2 rounded-md shadow-sm">
-									<input
-										type="text"
-										name="description"
-										id="description"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Describe the responsibilities of the position"
 										required
 									/>
 								</div>

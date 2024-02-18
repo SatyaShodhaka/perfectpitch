@@ -44,3 +44,15 @@ export function extractScoreAndAnalysis(input: string): {
   
 	return { score, analysis };
   }
+
+  export function extractQuestions(input: string): string[] {
+    // Define regex pattern to capture questions
+	const questionRegex = /\d+\.\s+(.+)/g;
+
+    // Match all occurrences of questions in the input string
+    const matches = input.matchAll(questionRegex);
+
+    const questions = Array.from(matches, match => match[1]);
+
+    return questions;
+	}
