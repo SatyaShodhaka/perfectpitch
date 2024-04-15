@@ -107,11 +107,15 @@ export default function Page(params: { id: string }) {
 	}
 
 	function sortQuestions(questions:any) {
-		return questions.sort((a:any, b:any) => {
-		  const numA = parseInt(a.question.match(/^\d+/)[0], 10); // Extract and parse the number from question A
-		  const numB = parseInt(b.question.match(/^\d+/)[0], 10); // Extract and parse the number from question B
-		  return numA - numB;
-		});
+		try {
+			return questions.sort((a:any, b:any) => {
+				const numA = parseInt(a.question.match(/^\d+/)[0], 10); // Extract and parse the number from question A
+				const numB = parseInt(b.question.match(/^\d+/)[0], 10); // Extract and parse the number from question B
+				return numA - numB;
+			  });
+		} catch (error) {
+			return(questions);
+		}
 	  }
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
